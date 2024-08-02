@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels: 
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: karchx/api
+        imagePullPolicy: Never # So it doesn't pull the image from remote registry
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MONGODB_ADMINUSERNAME
+          value: root
+        - name: MONGODB_ADMINPASSWORD
+          value: example
+        - name: MONGODB_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: api-app-config
+              key: mongodb_url
+        - name: REDIS_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: api-app-config
+              key: redis_url
+        - name: REDIS_PORT
+          value: "6379"
+        - name: KAFKA_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: api-app-config
+              key: kafka_url
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: api
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+      nodePort: 30007
