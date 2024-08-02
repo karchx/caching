@@ -25,11 +25,11 @@ spec:
         ports:
         - containerPort: 8000
         env:
-        - name: MONGODB_ADMINUSERNAME
+        - name: MONGODB_USERNAME
           value: root
-        - name: MONGODB_ADMINPASSWORD
+        - name: MONGODB_PASSWORD
           value: example
-        - name: MONGODB_SERVER
+        - name: MONGODB_SERVER 
           valueFrom:
             configMapKeyRef:
               name: api-app-config

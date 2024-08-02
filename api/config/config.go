@@ -31,7 +31,7 @@ func (c *Config) InitializeAppConfig() {
 	dbServer := os.Getenv("MONGODB_SERVER")
 	dbUsername, dbPassword := os.Getenv("MONGODB_USERNAME"), os.Getenv("MONGODB_PASSWORD")
 	MongoDBURI = fmt.Sprintf(mongoDBURIStr, dbUsername, dbPassword, dbServer)
-	c.logger.Infof("mongodb server URI is : %s", dbServer)
+	c.logger.Infof("mongodb server URI is : %s", MongoDBURI)
 }
 
 func (c *Config) Logger() *log.Logger {

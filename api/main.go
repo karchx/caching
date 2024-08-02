@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/karchx/api/config"
+	"github.com/karchx/api/data"
 )
 
 const (
@@ -25,6 +26,17 @@ const (
 func main() {
 	c := config.NewConfig()
 	c.InitializeAppConfig()
+
+	if err := data.InitializeMongoClient(); err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		if err := data.MongoClient.Disconnect(context.Background()); err != nil {
+			panic(err)
+		}
+	}()
+
 	router := initializeHTTPRouter()
 	// HTTP server configuration
 	httpServer := &http.Server{
@@ -69,5 +81,5 @@ func initializeHTTPRouter() *mux.Router {
 
 func articlesCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Category %s\n", "jfdlkj")
+	fmt.Fprintf(w, "Category %s\n", "hola")
 }
